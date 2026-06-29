@@ -362,7 +362,7 @@ const OrderForm = () => {
     e.preventDefault();
     const message = `Halo ViralAI Studio! Saya mau order paket ${formData.paket}.\n\nNama Bisnis: ${formData.namaBisnis}\nDeskripsi: ${formData.deskripsi}\nWA: ${formData.whatsapp}`;
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/628123456789?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/6285974107446?text=${encoded}`, '_blank');
   };
 
   return (
@@ -442,7 +442,7 @@ const CTA = () => (
         <a href="#order" className="bg-brand-accent text-brand-primary px-8 md:px-10 py-4 md:py-5 rounded-lg font-bold text-base md:text-lg hover:brightness-110 transition-all">
           Pesan Video Sekarang
         </a>
-        <a href="https://wa.me/628123456789" target="_blank" className="border border-neutral-white/30 text-neutral-white px-8 md:px-10 py-4 md:py-5 rounded-lg font-bold text-base md:text-lg hover:bg-neutral-white/10 transition-all">
+        <a href="https://wa.me/6285974107446" target="_blank" className="border border-neutral-white/30 text-neutral-white px-8 md:px-10 py-4 md:py-5 rounded-lg font-bold text-base md:text-lg hover:bg-neutral-white/10 transition-all">
           Chat via WhatsApp
         </a>
       </div>
@@ -524,7 +524,7 @@ function App() {
       <Footer />
 
       <a
-        href="https://wa.me/628123456789"
+        href="https://wa.me/6285974107446"
         target="_blank"
         className="fixed bottom-8 right-8 w-16 h-16 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform z-50"
       >
