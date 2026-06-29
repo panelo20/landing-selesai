@@ -2,34 +2,34 @@ import { useState, useRef, useEffect } from 'react';
 import {
   CheckCircle2,
   MessageCircle,
-  Rocket,
   Video,
   Menu,
   X,
   Zap,
   Palette,
   TrendingUp,
+  Sparkles,
+  Play,
+  ArrowRight,
+  Star,
+  Send,
+  AtSign,
 } from 'lucide-react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { motion, AnimatePresence, useInView, useScroll, useTransform } from 'framer-motion';
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
 };
 
-const fadeLeft = {
-  hidden: { opacity: 0, x: -60 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
-};
-
-const fadeRight = {
-  hidden: { opacity: 0, x: 60 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
 };
 
 const AnimatedSection = ({ children, variants = fadeUp, className = '', delay = 0 }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
   return (
     <motion.div
       ref={ref}
@@ -44,6 +44,26 @@ const AnimatedSection = ({ children, variants = fadeUp, className = '', delay = 
   );
 };
 
+const MarqueeText = () => (
+  <div className="overflow-hidden py-4 bg-brand-accent">
+    <motion.div
+      className="flex gap-8 whitespace-nowrap"
+      animate={{ x: ['0%', '-50%'] }}
+      transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+    >
+      {[...Array(2)].map((_, i) => (
+        <div key={i} className="flex gap-8 items-center">
+          {['VIDEO AI', 'TIKTOK', 'REELS', 'SHORTS', 'VIRAL', 'UMKM', 'KONTEN', 'BRANDING'].map((text, j) => (
+            <span key={j} className="text-brand-primary font-bold text-sm tracking-widest flex items-center gap-8">
+              {text} <Star className="w-3 h-3 fill-brand-primary" />
+            </span>
+          ))}
+        </div>
+      ))}
+    </motion.div>
+  </div>
+);
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -55,24 +75,27 @@ const Navbar = () => {
   }, []);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${scrolled ? 'py-2' : 'py-4'}`}>
-      <div className="max-w-[1440px] mx-auto px-4 md:px-20">
-        <nav className="glass rounded-lg border-b border-brand-primary/10 px-4 md:px-6 py-3 flex items-center justify-between relative">
-          <a className="font-bold text-lg md:text-xl tracking-tight text-brand-primary" href="#hero">
-            VIRALAI<span className="text-brand-primary/60">STUDIO</span>
+    <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${scrolled ? 'py-2' : 'py-3 md:py-4'}`}>
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        <nav className={`${scrolled ? 'glass-dark' : 'bg-transparent'} rounded-2xl px-5 md:px-6 py-3 flex items-center justify-between relative transition-all duration-500 ${scrolled ? 'border border-neutral-white/5' : ''}`}>
+          <a className="font-bold text-lg md:text-xl tracking-tight text-neutral-white flex items-center gap-2" href="#hero">
+            <div className="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-brand-primary" />
+            </div>
+            VIRAL<span className="text-brand-accent">AI</span>
           </a>
 
-          <div className="hidden lg:flex items-center gap-4">
-            <a className="px-4 py-2 text-sm font-medium hover:bg-black/5 rounded-md transition-colors" href="#layanan">Layanan</a>
-            <a className="px-4 py-2 text-sm font-medium hover:bg-black/5 rounded-md transition-colors" href="#tentang">Tentang Kami</a>
-            <a className="px-4 py-2 text-sm font-medium hover:bg-black/5 rounded-md transition-colors" href="#harga">Harga</a>
+          <div className="hidden lg:flex items-center gap-1">
+            {[['#layanan', 'Layanan'], ['#tentang', 'Tentang'], ['#harga', 'Harga'], ['#portfolio', 'Portfolio']].map(([href, label]) => (
+              <a key={href} className="px-4 py-2 text-sm font-medium text-neutral-white/70 hover:text-neutral-white rounded-full hover:bg-neutral-white/5 transition-all" href={href}>{label}</a>
+            ))}
           </div>
 
-          <div className="flex items-center gap-4">
-            <a href="#order" className="hidden sm:inline-block bg-brand-primary text-neutral-white text-sm font-semibold px-5 py-2.5 rounded-md hover:bg-brand-primary/90 transition-all">
-              Pesan Sekarang
+          <div className="flex items-center gap-3">
+            <a href="#order" className="hidden sm:inline-flex items-center gap-2 bg-brand-accent text-brand-primary text-sm font-bold px-5 py-2.5 rounded-full hover:shadow-[0_0_30px_rgba(168,255,0,0.3)] transition-all hover:scale-105">
+              Order Sekarang <ArrowRight className="w-4 h-4" />
             </a>
-            <button className="lg:hidden p-2 text-brand-primary" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle Menu">
+            <button className="lg:hidden p-2 text-neutral-white" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle Menu">
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
@@ -80,17 +103,17 @@ const Navbar = () => {
           <AnimatePresence>
             {isOpen && (
               <motion.div
-                initial={{ opacity: 0, y: -16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -16 }}
+                initial={{ opacity: 0, y: -16, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -16, scale: 0.95 }}
                 transition={{ duration: 0.3 }}
-                className="fixed inset-x-4 top-[calc(100%+1rem)] bg-neutral-bg border border-brand-primary/10 rounded-xl p-6 shadow-2xl lg:hidden"
+                className="fixed inset-x-4 top-[calc(100%+0.5rem)] glass-dark border border-neutral-white/10 rounded-2xl p-6 shadow-2xl lg:hidden"
               >
-                <div className="flex flex-col gap-4">
-                  <a className="p-3 text-lg font-semibold border-b border-brand-primary/5" href="#layanan" onClick={() => setIsOpen(false)}>Layanan</a>
-                  <a className="p-3 text-lg font-semibold border-b border-brand-primary/5" href="#tentang" onClick={() => setIsOpen(false)}>Tentang Kami</a>
-                  <a className="p-3 text-lg font-semibold border-b border-brand-primary/5" href="#harga" onClick={() => setIsOpen(false)}>Harga</a>
-                  <a className="p-4 mt-2 bg-brand-primary text-neutral-white text-center rounded-lg font-bold" href="#order" onClick={() => setIsOpen(false)}>Pesan Sekarang</a>
+                <div className="flex flex-col gap-2">
+                  {[['#layanan', 'Layanan'], ['#tentang', 'Tentang'], ['#harga', 'Harga'], ['#portfolio', 'Portfolio']].map(([href, label]) => (
+                    <a key={href} className="p-3 text-lg font-semibold text-neutral-white hover:text-brand-accent transition-colors rounded-xl hover:bg-neutral-white/5" href={href} onClick={() => setIsOpen(false)}>{label}</a>
+                  ))}
+                  <a className="p-4 mt-2 bg-brand-accent text-brand-primary text-center rounded-xl font-bold" href="#order" onClick={() => setIsOpen(false)}>Order Sekarang</a>
                 </div>
               </motion.div>
             )}
@@ -101,83 +124,127 @@ const Navbar = () => {
   );
 };
 
-const Hero = () => (
-  <section id="hero" className="relative min-h-screen bg-brand-primary flex flex-col justify-center items-center px-6 md:px-20 pt-28 md:pt-[150px] pb-32 md:pb-48">
-    <div className="absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-brand-primary/40 via-brand-primary/70 to-brand-primary z-10" />
-      <img
-        src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?w=1920&h=1080&fit=crop"
-        alt="Hero background"
-        className="w-full h-full object-cover"
-      />
-    </div>
+const Hero = () => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
 
-    <div className="relative z-20 max-w-7xl w-full flex flex-col lg:flex-row justify-between items-start gap-8 md:gap-12">
-      <AnimatedSection className="max-w-3xl space-y-6">
-        <div className="inline-flex bg-neutral-white/10 backdrop-blur-md px-3 py-1.5 rounded-sm border border-neutral-white/20">
-          <span className="font-mono text-[10px] uppercase tracking-wider text-neutral-white">AI Video Marketing untuk UMKM</span>
-        </div>
-        <h1 className="text-brand-accent text-4xl md:text-7xl font-bold leading-[1.1] tracking-tighter">
-          Video Promosi<br />Sekelas Brand Besar,<br />Harga UMKM.
-        </h1>
-      </AnimatedSection>
+  return (
+    <section ref={ref} id="hero" className="relative min-h-screen bg-brand-primary flex flex-col justify-center items-center px-4 md:px-8 pt-24 pb-12 overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-20 -left-20 w-[500px] h-[500px] bg-brand-accent/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-20 -right-20 w-[400px] h-[400px] bg-brand-purple/10 rounded-full blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-blue/5 rounded-full blur-[150px]" />
+      </div>
 
-      <AnimatedSection className="lg:max-w-xs md:pt-10" delay={0.2}>
-        <p className="text-neutral-white text-base md:text-lg font-medium leading-relaxed opacity-90">
-          Tingkatkan penjualan Anda dengan video AI profesional dalam 3-5 hari. Tanpa model, tanpa studio, tanpa mahal.
-        </p>
-      </AnimatedSection>
-    </div>
+      <div className="absolute inset-0 z-[1]" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
-    <div className="relative z-30 px-0 mt-20 md:mt-32 w-full">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-        <AnimatedSection className="bg-neutral-white p-8 md:p-10 rounded-xl shadow-card space-y-6 flex flex-col justify-between" delay={0.1}>
-          <div className="space-y-1">
-            <h3 className="text-brand-primary text-3xl md:text-4xl font-bold tracking-tighter">100+</h3>
-            <p className="text-brand-primary text-xs font-medium uppercase tracking-wide">UMKM Sudah Percaya</p>
-          </div>
-          <div className="flex -space-x-3 mt-4">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white bg-brand-primary/10" />
-            ))}
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-brand-accent flex items-center justify-center text-[10px] font-bold border-2 border-white text-brand-primary">+96</div>
+      <div className="relative z-10 max-w-6xl w-full text-center space-y-8 md:space-y-10">
+        <AnimatedSection>
+          <motion.div
+            className="inline-flex items-center gap-2 bg-neutral-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-neutral-white/10"
+            whileHover={{ scale: 1.05 }}
+          >
+            <span className="w-2 h-2 rounded-full bg-brand-accent animate-pulse" />
+            <span className="text-xs font-semibold text-neutral-white/80 tracking-wide">AI-Powered Video Marketing</span>
+          </motion.div>
+        </AnimatedSection>
+
+        <AnimatedSection delay={0.1}>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.05] tracking-tighter">
+            <span className="text-neutral-white">Bikin Konten</span>
+            <br />
+            <span className="text-gradient">yang Bikin</span>
+            <br />
+            <span className="text-neutral-white">Orang </span>
+            <span className="relative inline-block">
+              <span className="text-brand-accent">Stop Scroll.</span>
+              <motion.div
+                className="absolute -bottom-2 left-0 right-0 h-1 bg-brand-accent rounded-full"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 1.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              />
+            </span>
+          </h1>
+        </AnimatedSection>
+
+        <AnimatedSection delay={0.2}>
+          <p className="text-neutral-white/50 text-base md:text-xl max-w-2xl mx-auto leading-relaxed font-medium">
+            Video promosi AI yang bikin FYP. Mulai dari 50k aja.
+            <br className="hidden md:block" />
+            Tanpa ribet, tanpa mahal, langsung viral.
+          </p>
+        </AnimatedSection>
+
+        <AnimatedSection delay={0.3}>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <motion.a
+              href="#order"
+              className="btn-glow flex items-center gap-2 text-base md:text-lg"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Play className="w-5 h-5" /> Mulai Sekarang
+            </motion.a>
+            <a href="#layanan" className="btn-outline flex items-center gap-2 text-base">
+              Lihat Layanan
+            </a>
           </div>
         </AnimatedSection>
 
-        <AnimatedSection className="bg-black p-8 md:p-10 rounded-xl shadow-card flex flex-col justify-between min-h-[280px]" delay={0.2}>
-          <div className="space-y-1">
-            <h3 className="text-neutral-white text-3xl md:text-4xl font-bold tracking-tighter">3-5 Hari</h3>
-            <p className="text-neutral-white/70 text-xs font-medium uppercase tracking-wide">Proses Pengerjaan Cepat</p>
-          </div>
-          <div className="mt-4 md:mt-0">
-            <Video className="w-12 h-12 text-brand-accent" />
-          </div>
-        </AnimatedSection>
-
-        <AnimatedSection className="bg-brand-accent p-8 md:p-10 rounded-xl shadow-card relative overflow-hidden flex flex-col justify-between" delay={0.3}>
-          <div className="relative z-10 space-y-1">
-            <h3 className="text-brand-primary text-3xl md:text-4xl font-bold tracking-tighter">Mulai 50k</h3>
-            <p className="text-brand-primary text-xs font-medium uppercase tracking-wide">Harga Terjangkau untuk UMKM</p>
-          </div>
-          <div className="mt-8 relative z-10">
-            <Rocket className="w-12 h-12 text-brand-primary/40" />
-          </div>
+        <AnimatedSection delay={0.5}>
+          <motion.div style={{ y }} className="mt-8 md:mt-16">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-3xl mx-auto">
+              {[
+                { value: '100+', label: 'UMKM Percaya', color: 'from-brand-accent/20 to-brand-accent/5' },
+                { value: '3-5', label: 'Hari Selesai', color: 'from-brand-blue/20 to-brand-blue/5' },
+                { value: '50k', label: 'Mulai Dari', color: 'from-brand-pink/20 to-brand-pink/5' },
+                { value: '95%', label: 'Puas', color: 'from-brand-purple/20 to-brand-purple/5' },
+              ].map((stat) => (
+                <motion.div
+                  key={stat.label}
+                  className={`bg-gradient-to-br ${stat.color} border border-neutral-white/5 rounded-2xl p-4 md:p-6 backdrop-blur-sm`}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                >
+                  <div className="text-2xl md:text-3xl font-bold text-neutral-white tracking-tight">{stat.value}</div>
+                  <div className="text-[10px] md:text-xs text-neutral-white/50 font-medium uppercase tracking-wider mt-1">{stat.label}</div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </AnimatedSection>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const About = () => (
-  <section id="tentang" className="bg-neutral-bg py-24 md:py-40 px-6 md:px-20 text-center">
-    <div className="max-w-4xl mx-auto space-y-8 md:space-y-12">
+  <section id="tentang" className="bg-neutral-bg py-20 md:py-32 px-4 md:px-8">
+    <div className="max-w-5xl mx-auto">
       <AnimatedSection>
-        <span className="inline-block border border-brand-primary rounded-full px-4 py-1 font-mono text-[10px] tracking-widest text-brand-primary uppercase">Tentang Kami</span>
-      </AnimatedSection>
-      <AnimatedSection delay={0.1}>
-        <h2 className="text-brand-primary text-2xl md:text-5xl font-bold leading-tight tracking-tight px-2">
-          Kami adalah studio kreatif berbasis AI yang membantu UMKM Indonesia membuat video marketing profesional dengan harga terjangkau, proses cepat, dan hasil yang siap viral.
-        </h2>
+        <div className="bg-neutral-white rounded-3xl p-8 md:p-16 border border-black/5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-brand-accent/10 rounded-full blur-[80px]" />
+          <div className="absolute bottom-0 left-0 w-40 h-40 bg-brand-purple/10 rounded-full blur-[80px]" />
+
+          <div className="relative z-10 space-y-6 md:space-y-8 text-center">
+            <span className="inline-flex items-center gap-2 bg-brand-primary/5 px-4 py-2 rounded-full text-xs font-bold text-brand-primary uppercase tracking-widest">
+              <Sparkles className="w-3 h-3" /> Tentang Kami
+            </span>
+            <h2 className="text-2xl md:text-5xl font-bold leading-tight tracking-tight text-brand-primary">
+              Studio kreatif berbasis AI yang bikin UMKM Indonesia punya
+              <span className="text-gradient"> konten sekelas brand besar</span> — cepat, murah, dan siap viral.
+            </h2>
+            <div className="flex flex-wrap gap-3 justify-center pt-4">
+              {['TikTok Ready', 'Reels Optimized', 'Shorts Friendly', 'FYP Targeted'].map(tag => (
+                <span key={tag} className="px-4 py-2 bg-brand-primary/5 rounded-full text-sm font-semibold text-brand-primary">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
       </AnimatedSection>
     </div>
   </section>
@@ -187,107 +254,169 @@ const services = [
   {
     num: '01',
     title: 'Video Produk AI',
-    desc: 'Tampilkan produk Anda dengan video berkualitas tinggi yang dihasilkan AI. Cocok untuk TikTok, Instagram Reels, dan marketplace.',
-    icon: <Video className="w-8 h-8" />,
-    bg: 'bg-brand-accent',
-    textColor: 'text-brand-primary',
-    numBg: 'bg-brand-primary text-brand-accent',
+    desc: 'Tampilkan produk lo dengan video kece yang dibikin AI. Siap upload ke TikTok, Reels, dan marketplace.',
+    icon: <Video className="w-6 h-6" />,
+    gradient: 'from-brand-accent/20 to-brand-accent/5',
+    iconBg: 'bg-brand-accent text-brand-primary',
     img: 'https://images.pexels.com/photos/5632399/pexels-photo-5632399.jpeg?w=800&h=600&fit=crop',
   },
   {
     num: '02',
-    title: 'Konten Sosial Media',
-    desc: 'Strategi dan konten video yang disesuaikan untuk meningkatkan engagement dan followers di platform sosial media Anda.',
-    icon: <Palette className="w-8 h-8" />,
-    bg: 'bg-neutral-white border border-brand-primary/10',
-    textColor: 'text-brand-primary',
-    numBg: 'bg-brand-primary text-neutral-white',
+    title: 'Konten Sosmed',
+    desc: 'Strategi konten + video yang bikin engagement naik dan followers nambah terus tiap hari.',
+    icon: <Palette className="w-6 h-6" />,
+    gradient: 'from-brand-pink/20 to-brand-pink/5',
+    iconBg: 'bg-brand-pink text-neutral-white',
     img: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?w=800&h=600&fit=crop',
   },
   {
     num: '03',
-    title: 'Video Iklan & Promosi',
-    desc: 'Video iklan yang dioptimalkan untuk konversi. Lengkap dengan caption, hashtag, dan strategi distribusi untuk hasil maksimal.',
-    icon: <TrendingUp className="w-8 h-8" />,
-    bg: 'bg-brand-primary',
-    textColor: 'text-neutral-white',
-    numBg: 'bg-brand-accent text-brand-primary',
+    title: 'Video Iklan & Ads',
+    desc: 'Video iklan yang dioptimasi buat konversi. Lengkap caption, hashtag, dan strategi distribusi.',
+    icon: <TrendingUp className="w-6 h-6" />,
+    gradient: 'from-brand-purple/20 to-brand-purple/5',
+    iconBg: 'bg-brand-purple text-neutral-white',
     img: 'https://images.pexels.com/photos/3153198/pexels-photo-3153198.jpeg?w=800&h=600&fit=crop',
   },
 ];
 
 const Services = () => (
-  <section id="layanan" className="bg-neutral-bg pb-12 md:pb-16">
-    <div className="max-w-[1440px] mx-auto px-6 md:px-20">
-      <div className="text-center mb-12 md:mb-20 space-y-4 md:space-y-6">
+  <section id="layanan" className="bg-neutral-bg pb-16 md:pb-24 px-4 md:px-8">
+    <div className="max-w-7xl mx-auto">
+      <div className="text-center mb-12 md:mb-16 space-y-4">
         <AnimatedSection>
-          <span className="inline-block border border-brand-primary rounded-full px-4 py-1 font-mono text-[10px] tracking-widest text-brand-primary uppercase">Layanan Kami</span>
+          <span className="inline-flex items-center gap-2 bg-brand-primary/5 px-4 py-2 rounded-full text-xs font-bold text-brand-primary uppercase tracking-widest">
+            <Zap className="w-3 h-3" /> Layanan
+          </span>
         </AnimatedSection>
         <AnimatedSection delay={0.1}>
-          <h2 className="text-brand-primary text-3xl md:text-5xl font-bold tracking-tight">Solusi Video Marketing AI</h2>
+          <h2 className="text-3xl md:text-6xl font-bold tracking-tight text-brand-primary">
+            Apa yang Kita <span className="text-gradient">Bisa Lakuin</span>
+          </h2>
         </AnimatedSection>
       </div>
 
-      {services.map((svc, i) => (
-        <AnimatedSection
-          key={svc.num}
-          variants={i % 2 === 0 ? fadeLeft : fadeRight}
-          className={`sticky ${i === 0 ? 'top-24 md:top-32' : i === 1 ? 'top-28 md:top-40' : 'top-32 md:top-48'} ${svc.bg} rounded-xl p-8 md:p-20 mb-12 md:mb-20 h-auto md:h-[550px] flex flex-col md:flex-row items-center justify-between gap-10 overflow-hidden group shadow-2xl`}
-        >
-          <div className="space-y-6 md:space-y-8 flex-1 w-full">
-            <span className={`${svc.numBg} px-4 py-1 rounded-full font-mono text-xs uppercase tracking-widest`}>{svc.num}</span>
-            <div className="space-y-4">
-              <h3 className={`${svc.textColor} text-2xl md:text-3xl font-bold`}>{svc.title}</h3>
-              <p className={`${svc.textColor === 'text-neutral-white' ? 'text-neutral-white/80' : 'text-brand-primary/80'} text-base md:text-lg leading-relaxed max-w-md`}>
-                {svc.desc}
-              </p>
-            </div>
-          </div>
-          <div className="flex-1 w-full h-[250px] md:h-full overflow-hidden rounded-lg">
-            <img src={svc.img} alt={svc.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-          </div>
-        </AnimatedSection>
-      ))}
+      <div className="grid md:grid-cols-3 gap-6">
+        {services.map((svc, i) => (
+          <AnimatedSection key={svc.num} delay={i * 0.1} variants={scaleIn}>
+            <motion.div
+              className="group bg-neutral-white rounded-3xl overflow-hidden border border-black/5 h-full flex flex-col"
+              whileHover={{ y: -8 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
+              <div className="relative h-52 md:h-64 overflow-hidden">
+                <img src={svc.img} alt={svc.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                <div className={`absolute top-4 left-4 ${svc.iconBg} w-10 h-10 rounded-xl flex items-center justify-center`}>
+                  {svc.icon}
+                </div>
+                <span className="absolute top-4 right-4 bg-neutral-white/90 backdrop-blur-sm px-3 py-1 rounded-full font-mono text-xs font-bold text-brand-primary">
+                  {svc.num}
+                </span>
+              </div>
+              <div className="p-6 md:p-8 flex-1 flex flex-col">
+                <h3 className="text-xl md:text-2xl font-bold text-brand-primary mb-3">{svc.title}</h3>
+                <p className="text-text-muted leading-relaxed text-sm md:text-base flex-1">{svc.desc}</p>
+                <a href="#order" className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-brand-primary group-hover:text-brand-accent transition-colors">
+                  Order Sekarang <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </a>
+              </div>
+            </motion.div>
+          </AnimatedSection>
+        ))}
+      </div>
     </div>
   </section>
 );
 
 const Values = () => (
-  <section className="bg-neutral-bg py-12 md:py-16 px-6 md:px-20 overflow-hidden">
-    <div className="max-w-7xl mx-auto space-y-12 md:space-y-20">
-      <div className="text-center space-y-4 md:space-y-6">
+  <section className="bg-brand-primary py-20 md:py-32 px-4 md:px-8 relative overflow-hidden">
+    <div className="absolute inset-0">
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-accent/5 rounded-full blur-[150px]" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-brand-purple/5 rounded-full blur-[150px]" />
+    </div>
+
+    <div className="max-w-7xl mx-auto relative z-10">
+      <div className="text-center mb-12 md:mb-16 space-y-4">
         <AnimatedSection>
-          <span className="inline-block border border-brand-primary rounded-full px-4 py-1 font-mono text-[10px] tracking-widest text-brand-primary uppercase">Kenapa Kami</span>
+          <span className="inline-flex items-center gap-2 bg-neutral-white/5 px-4 py-2 rounded-full text-xs font-bold text-neutral-white/80 uppercase tracking-widest border border-neutral-white/10">
+            Kenapa Kami
+          </span>
         </AnimatedSection>
         <AnimatedSection delay={0.1}>
-          <h2 className="text-brand-primary text-3xl md:text-5xl font-bold tracking-tight">Keunggulan ViralAI Studio</h2>
+          <h2 className="text-3xl md:text-6xl font-bold tracking-tight text-neutral-white">
+            Kenapa <span className="text-brand-accent">ViralAI</span>?
+          </h2>
         </AnimatedSection>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 relative">
-        <AnimatedSection className="bg-neutral-white p-8 md:p-10 rounded-xl shadow-card md:-translate-x-[50px] md:-translate-y-[50px] md:-rotate-[4deg] flex flex-col justify-end min-h-[300px] md:min-h-[350px] z-10">
-          <div className="space-y-4">
-            <Zap className="w-10 h-10 text-brand-accent" />
-            <h3 className="text-brand-primary text-xl md:text-2xl font-bold">Cepat & Efisien</h3>
-            <p className="text-text-muted leading-relaxed text-sm md:text-base">
-              Proses pengerjaan 3-5 hari kerja. Tanpa perlu sesi foto, model, atau studio mahal.
-            </p>
-          </div>
-        </AnimatedSection>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          { icon: <Zap className="w-8 h-8" />, title: 'Super Cepat', desc: '3-5 hari jadi. Ga pake lama, ga pake ribet. Langsung upload!', color: 'text-brand-accent', bg: 'bg-brand-accent/10' },
+          { icon: <Sparkles className="w-8 h-8" />, title: 'Kualitas Pro', desc: 'Hasil video sekelas brand besar. AI + sentuhan kreatif manusia.', color: 'text-brand-blue', bg: 'bg-brand-blue/10' },
+          { icon: <TrendingUp className="w-8 h-8" />, title: 'FYP Ready', desc: 'Dioptimasi buat algoritma TikTok, Reels, dan Shorts. Siap viral!', color: 'text-brand-pink', bg: 'bg-brand-pink/10' },
+        ].map((item, i) => (
+          <AnimatedSection key={item.title} delay={i * 0.1}>
+            <motion.div
+              className="bg-neutral-white/5 border border-neutral-white/5 rounded-3xl p-8 md:p-10 backdrop-blur-sm group"
+              whileHover={{ scale: 1.02, borderColor: 'rgba(168,255,0,0.2)' }}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
+              <div className={`${item.bg} w-16 h-16 rounded-2xl flex items-center justify-center mb-6 ${item.color} group-hover:scale-110 transition-transform`}>
+                {item.icon}
+              </div>
+              <h3 className="text-neutral-white text-xl md:text-2xl font-bold mb-3">{item.title}</h3>
+              <p className="text-neutral-white/50 leading-relaxed">{item.desc}</p>
+            </motion.div>
+          </AnimatedSection>
+        ))}
+      </div>
+    </div>
+  </section>
+);
 
-        <AnimatedSection delay={0.1} className="rounded-xl overflow-hidden shadow-card h-[350px] md:h-[400px] z-20">
-          <img src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?w=600&h=800&fit=crop" alt="Kolaborasi" className="w-full h-full object-cover" />
+const Testimonials = () => (
+  <section className="bg-neutral-bg py-20 md:py-32 px-4 md:px-8 overflow-hidden">
+    <div className="max-w-7xl mx-auto">
+      <div className="text-center mb-12 md:mb-16 space-y-4">
+        <AnimatedSection>
+          <span className="inline-flex items-center gap-2 bg-brand-primary/5 px-4 py-2 rounded-full text-xs font-bold text-brand-primary uppercase tracking-widest">
+            <Star className="w-3 h-3" /> Testimoni
+          </span>
         </AnimatedSection>
+        <AnimatedSection delay={0.1}>
+          <h2 className="text-3xl md:text-6xl font-bold tracking-tight text-brand-primary">
+            Yang Udah <span className="text-gradient-pink">Coba Bilang...</span>
+          </h2>
+        </AnimatedSection>
+      </div>
 
-        <AnimatedSection delay={0.2} className="bg-brand-accent p-8 md:p-10 rounded-xl shadow-card md:translate-x-[50px] md:translate-y-[50px] md:rotate-[11deg] flex flex-col justify-end min-h-[300px] md:min-h-[350px] z-10">
-          <div className="space-y-4">
-            <TrendingUp className="w-10 h-10 text-brand-primary" />
-            <h3 className="text-brand-primary text-xl md:text-2xl font-bold">Siap Viral</h3>
-            <p className="text-brand-primary/70 leading-relaxed text-sm md:text-base">
-              Video dioptimalkan untuk algoritma TikTok, Reels, dan Shorts agar konten Anda mudah viral.
-            </p>
-          </div>
-        </AnimatedSection>
+      <div className="grid md:grid-cols-3 gap-6">
+        {[
+          { name: 'Rina S.', biz: 'Skincare Lokal', text: 'Gila sih, video produk dari ViralAI langsung bikin orderan naik 3x lipat. Worth it banget!', stars: 5 },
+          { name: 'Adi P.', biz: 'Kedai Kopi', text: 'Baru pertama kali video promosi seharga ini tapi kualitasnya kayak brand gede. Mantap!', stars: 5 },
+          { name: 'Maya K.', biz: 'Fashion Hijab', text: 'Videonya langsung FYP di TikTok! Followers nambah 2000 dalam seminggu. Recommended!', stars: 5 },
+        ].map((t, idx) => (
+          <AnimatedSection key={t.name} delay={idx * 0.1}>
+            <div className="bg-neutral-white rounded-3xl p-8 border border-black/5 h-full flex flex-col card-hover">
+              <div className="flex gap-1 mb-4">
+                {[...Array(t.stars)].map((_, j) => (
+                  <Star key={j} className="w-4 h-4 fill-brand-orange text-brand-orange" />
+                ))}
+              </div>
+              <p className="text-brand-primary/80 leading-relaxed flex-1 text-sm md:text-base">"{t.text}"</p>
+              <div className="mt-6 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-accent to-brand-blue flex items-center justify-center text-sm font-bold text-brand-primary">
+                  {t.name[0]}
+                </div>
+                <div>
+                  <div className="font-bold text-sm text-brand-primary">{t.name}</div>
+                  <div className="text-xs text-text-muted">{t.biz}</div>
+                </div>
+              </div>
+            </div>
+          </AnimatedSection>
+        ))}
       </div>
     </div>
   </section>
@@ -295,53 +424,67 @@ const Values = () => (
 
 const Pricing = () => {
   const tiers = [
-    { name: 'Starter', price: '50k', features: ['1 Video (15s)', '1 Revisi', 'Watermark', 'Format Vertikal'] },
-    { name: 'Promo', price: '99k', features: ['1 Video (30s)', '2 Revisi', 'Tanpa Watermark', 'Vertikal + Horizontal'], recommended: true },
-    { name: 'Viral', price: '175k', features: ['2 Video (30s)', '3 Revisi', 'Caption + Hashtag', 'Prioritas'] },
+    { name: 'Starter', price: '50k', emoji: 'from-brand-blue/10 to-brand-blue/5', border: 'border-brand-blue/20', badge: 'bg-brand-blue/10 text-brand-blue', features: ['1 Video (15s)', '1 Revisi', 'Watermark', 'Format Vertikal'] },
+    { name: 'Promo', price: '99k', emoji: 'from-brand-accent/10 to-brand-accent/5', border: 'border-brand-accent/30', badge: 'bg-brand-accent/10 text-brand-primary', features: ['1 Video (30s)', '2 Revisi', 'Tanpa Watermark', 'Vertikal + Horizontal'], recommended: true },
+    { name: 'Viral', price: '175k', emoji: 'from-brand-purple/10 to-brand-purple/5', border: 'border-brand-purple/20', badge: 'bg-brand-purple/10 text-brand-purple', features: ['2 Video (30s)', '3 Revisi', 'Caption + Hashtag', 'Prioritas'] },
   ];
 
   return (
-    <section id="harga" className="bg-brand-primary py-24 md:py-40 px-6 md:px-20">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12 md:mb-20 space-y-4 md:space-y-6">
+    <section id="harga" className="bg-neutral-bg py-20 md:py-32 px-4 md:px-8">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-12 md:mb-16 space-y-4">
           <AnimatedSection>
-            <span className="inline-block border border-neutral-white/30 rounded-full px-4 py-1 font-mono text-[10px] tracking-widest text-neutral-white uppercase">Harga</span>
+            <span className="inline-flex items-center gap-2 bg-brand-primary/5 px-4 py-2 rounded-full text-xs font-bold text-brand-primary uppercase tracking-widest">
+              Harga
+            </span>
           </AnimatedSection>
           <AnimatedSection delay={0.1}>
-            <h2 className="text-brand-accent text-3xl md:text-5xl font-bold tracking-tight">Investasi Terjangkau</h2>
-            <p className="text-neutral-white/60 mt-4">Pilih paket yang sesuai dengan kebutuhan promosi Anda</p>
+            <h2 className="text-3xl md:text-6xl font-bold tracking-tight text-brand-primary">
+              Harga <span className="text-gradient">Super Friendly</span>
+            </h2>
+            <p className="text-text-muted mt-4 text-base md:text-lg">Ga perlu budget gede buat konten yang kece</p>
           </AnimatedSection>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6">
           {tiers.map((tier, i) => (
-            <AnimatedSection key={tier.name} delay={i * 0.1}>
-              <div className={`relative p-8 md:p-10 rounded-xl flex flex-col h-full ${tier.recommended ? 'bg-brand-accent text-brand-primary' : 'bg-neutral-white/5 border border-neutral-white/10 text-neutral-white'}`}>
+            <AnimatedSection key={tier.name} delay={i * 0.1} variants={scaleIn}>
+              <motion.div
+                className={`relative bg-gradient-to-br ${tier.emoji} border ${tier.border} rounded-3xl p-8 flex flex-col h-full backdrop-blur-sm`}
+                whileHover={{ y: -8, scale: 1.02 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
                 {tier.recommended && (
-                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-primary text-brand-accent px-4 py-1 rounded-full text-xs font-bold font-mono uppercase tracking-wider">
-                    Terlaris
-                  </span>
+                  <motion.span
+                    className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-accent text-brand-primary px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider animate-pulse-glow"
+                    animate={{ y: [0, -3, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    Best Seller
+                  </motion.span>
                 )}
-                <h3 className="text-2xl font-bold mb-2">{tier.name}</h3>
-                <div className="flex items-baseline gap-1 mb-8">
-                  <span className="text-sm font-semibold">Rp</span>
-                  <span className="text-5xl font-bold tracking-tighter">{tier.price}</span>
+                <div className={`inline-flex self-start ${tier.badge} px-3 py-1 rounded-full text-xs font-bold mb-4`}>
+                  {tier.name}
                 </div>
-                <ul className="space-y-4 mb-8 flex-1">
+                <div className="flex items-baseline gap-1 mb-6">
+                  <span className="text-sm font-bold text-brand-primary/60">Rp</span>
+                  <span className="text-5xl md:text-6xl font-bold tracking-tighter text-brand-primary">{tier.price}</span>
+                </div>
+                <ul className="space-y-3 mb-8 flex-1">
                   {tier.features.map(f => (
-                    <li key={f} className="flex items-center gap-3">
-                      <CheckCircle2 className={`w-5 h-5 ${tier.recommended ? 'text-brand-primary' : 'text-brand-accent'}`} />
-                      <span>{f}</span>
+                    <li key={f} className="flex items-center gap-3 text-sm">
+                      <CheckCircle2 className="w-5 h-5 text-brand-accent shrink-0" />
+                      <span className="text-brand-primary/80">{f}</span>
                     </li>
                   ))}
                 </ul>
                 <a
                   href="#order"
-                  className={`w-full py-4 rounded-lg font-bold transition-all text-center block ${tier.recommended ? 'bg-brand-primary text-neutral-white hover:bg-brand-primary/90' : 'bg-neutral-white/10 hover:bg-neutral-white/20'}`}
+                  className={`w-full py-4 rounded-2xl font-bold transition-all text-center block text-sm ${tier.recommended ? 'bg-brand-accent text-brand-primary hover:shadow-[0_0_30px_rgba(168,255,0,0.3)]' : 'bg-brand-primary/5 text-brand-primary hover:bg-brand-primary/10'}`}
                 >
-                  Pilih Paket {tier.name}
+                  Pilih {tier.name}
                 </a>
-              </div>
+              </motion.div>
             </AnimatedSection>
           ))}
         </div>
@@ -366,61 +509,73 @@ const OrderForm = () => {
   };
 
   return (
-    <section id="order" className="bg-neutral-bg py-24 md:py-32 px-6 md:px-20">
-      <div className="max-w-3xl mx-auto">
+    <section id="order" className="bg-brand-primary py-20 md:py-32 px-4 md:px-8 relative overflow-hidden">
+      <div className="absolute inset-0">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-brand-accent/5 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-pink/5 rounded-full blur-[150px]" />
+      </div>
+
+      <div className="max-w-2xl mx-auto relative z-10">
         <AnimatedSection>
-          <div className="bg-neutral-white rounded-xl p-8 md:p-12 shadow-card border border-brand-primary/5">
-            <div className="text-center mb-10 space-y-4">
-              <span className="inline-block border border-brand-primary rounded-full px-4 py-1 font-mono text-[10px] tracking-widest text-brand-primary uppercase">Order</span>
-              <h2 className="text-brand-primary text-3xl md:text-4xl font-bold tracking-tight">Formulir Pesanan</h2>
-              <p className="text-text-muted">Isi detail produk Anda dan kami akan hubungi via WhatsApp</p>
+          <div className="bg-neutral-white/5 backdrop-blur-xl rounded-3xl p-8 md:p-12 border border-neutral-white/10">
+            <div className="text-center mb-8 space-y-4">
+              <span className="inline-flex items-center gap-2 bg-brand-accent/10 px-4 py-2 rounded-full text-xs font-bold text-brand-accent uppercase tracking-widest">
+                <Send className="w-3 h-3" /> Order
+              </span>
+              <h2 className="text-neutral-white text-3xl md:text-4xl font-bold tracking-tight">Yuk, Mulai Project-mu</h2>
+              <p className="text-neutral-white/40">Isi form, kita langsung hubungi via WhatsApp</p>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid md:grid-cols-2 gap-5">
                 <div className="space-y-2">
-                  <label className="text-sm font-bold ml-1">Nama Bisnis / Produk</label>
+                  <label className="text-xs font-bold text-neutral-white/60 uppercase tracking-wider ml-1">Nama Bisnis</label>
                   <input
                     required
-                    className="w-full px-4 py-3 rounded-lg border border-brand-primary/10 bg-neutral-bg focus:border-brand-primary focus:ring-2 focus:ring-brand-accent/30 outline-none transition-all"
+                    className="w-full px-4 py-3.5 rounded-xl bg-neutral-white/5 border border-neutral-white/10 text-neutral-white placeholder:text-neutral-white/20 focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 outline-none transition-all"
                     placeholder="Contoh: Kripik Pedas Mak Ijah"
                     onChange={e => setFormData({ ...formData, namaBisnis: e.target.value })}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-bold ml-1">Nomor WhatsApp</label>
+                  <label className="text-xs font-bold text-neutral-white/60 uppercase tracking-wider ml-1">No. WhatsApp</label>
                   <input
                     required
-                    className="w-full px-4 py-3 rounded-lg border border-brand-primary/10 bg-neutral-bg focus:border-brand-primary focus:ring-2 focus:ring-brand-accent/30 outline-none transition-all"
+                    className="w-full px-4 py-3.5 rounded-xl bg-neutral-white/5 border border-neutral-white/10 text-neutral-white placeholder:text-neutral-white/20 focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 outline-none transition-all"
                     placeholder="0812xxxx"
                     onChange={e => setFormData({ ...formData, whatsapp: e.target.value })}
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold ml-1">Pilih Paket</label>
+                <label className="text-xs font-bold text-neutral-white/60 uppercase tracking-wider ml-1">Paket</label>
                 <select
-                  className="w-full px-4 py-3 rounded-lg border border-brand-primary/10 bg-neutral-bg focus:border-brand-primary focus:ring-2 focus:ring-brand-accent/30 outline-none transition-all"
+                  className="w-full px-4 py-3.5 rounded-xl bg-neutral-white/5 border border-neutral-white/10 text-neutral-white focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 outline-none transition-all"
                   value={formData.paket}
                   onChange={e => setFormData({ ...formData, paket: e.target.value })}
                 >
-                  <option value="Starter">Starter - Rp 50k</option>
-                  <option value="Promo">Promo - Rp 99k (Terlaris)</option>
-                  <option value="Viral">Viral - Rp 175k</option>
+                  <option value="Starter" className="bg-brand-primary">Starter - Rp 50k</option>
+                  <option value="Promo" className="bg-brand-primary">Promo - Rp 99k (Best Seller)</option>
+                  <option value="Viral" className="bg-brand-primary">Viral - Rp 175k</option>
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-bold ml-1">Deskripsi Produk & Keunggulan</label>
+                <label className="text-xs font-bold text-neutral-white/60 uppercase tracking-wider ml-1">Deskripsi Produk</label>
                 <textarea
                   required
                   rows={4}
-                  className="w-full px-4 py-3 rounded-lg border border-brand-primary/10 bg-neutral-bg focus:border-brand-primary focus:ring-2 focus:ring-brand-accent/30 outline-none transition-all resize-none"
-                  placeholder="Jelaskan produk Anda..."
+                  className="w-full px-4 py-3.5 rounded-xl bg-neutral-white/5 border border-neutral-white/10 text-neutral-white placeholder:text-neutral-white/20 focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/10 outline-none transition-all resize-none"
+                  placeholder="Ceritain produk kamu..."
                   onChange={e => setFormData({ ...formData, deskripsi: e.target.value })}
                 />
               </div>
-              <button type="submit" className="w-full btn-accent flex items-center justify-center gap-2 text-lg">
-                Kirim Brief & Chat Admin <MessageCircle size={20} />
-              </button>
+              <motion.button
+                type="submit"
+                className="w-full btn-glow flex items-center justify-center gap-2 text-base md:text-lg"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Kirim & Chat Admin <MessageCircle size={20} />
+              </motion.button>
             </form>
           </div>
         </AnimatedSection>
@@ -430,80 +585,99 @@ const OrderForm = () => {
 };
 
 const CTA = () => (
-  <section className="bg-brand-primary py-24 md:py-32 px-6 md:px-20 text-center relative overflow-hidden">
-    <div className="absolute inset-0 opacity-10 pointer-events-none">
-      <img src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?w=1920&h=1080&fit=crop" alt="Pattern" className="w-full h-full object-cover" />
-    </div>
-    <AnimatedSection className="max-w-4xl mx-auto space-y-12 relative z-10">
-      <h2 className="text-brand-accent text-4xl md:text-7xl font-bold tracking-tighter leading-[1.1]">
-        Siap Buat Video yang Bikin Jualan Meledak?
-      </h2>
-      <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
-        <a href="#order" className="bg-brand-accent text-brand-primary px-8 md:px-10 py-4 md:py-5 rounded-lg font-bold text-base md:text-lg hover:brightness-110 transition-all">
-          Pesan Video Sekarang
-        </a>
-        <a href="https://wa.me/6285974107446" target="_blank" className="border border-neutral-white/30 text-neutral-white px-8 md:px-10 py-4 md:py-5 rounded-lg font-bold text-base md:text-lg hover:bg-neutral-white/10 transition-all">
-          Chat via WhatsApp
-        </a>
+  <section className="bg-neutral-bg py-20 md:py-32 px-4 md:px-8">
+    <AnimatedSection>
+      <div className="max-w-5xl mx-auto bg-gradient-to-br from-brand-primary via-brand-secondary to-brand-primary rounded-3xl p-10 md:p-20 text-center relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/3 w-80 h-80 bg-brand-accent/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-0 right-1/3 w-80 h-80 bg-brand-purple/10 rounded-full blur-[120px]" />
+        </div>
+        <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+
+        <div className="relative z-10 space-y-8">
+          <h2 className="text-3xl md:text-6xl font-bold tracking-tighter leading-[1.1] text-neutral-white">
+            Udah Siap Bikin<br />
+            <span className="text-brand-accent">Jualan Meledak</span>?
+          </h2>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <motion.a
+              href="#order"
+              className="btn-glow flex items-center justify-center gap-2 text-base md:text-lg"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Mulai Sekarang <ArrowRight className="w-5 h-5" />
+            </motion.a>
+            <a href="https://wa.me/6285974107446" target="_blank" className="btn-outline flex items-center justify-center gap-2 text-base">
+              <MessageCircle className="w-5 h-5" /> Chat WhatsApp
+            </a>
+          </div>
+        </div>
       </div>
     </AnimatedSection>
   </section>
 );
 
 const Footer = () => (
-  <footer className="bg-brand-primary text-neutral-white pt-20 md:pt-32 pb-12 md:pb-20 px-6 md:px-20 overflow-hidden relative">
-    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-20">
-      <div className="space-y-8 md:space-y-12">
-        <div className="space-y-4">
-          <h2 className="text-brand-accent text-4xl md:text-6xl font-bold leading-tight tracking-tighter">
-            Video AI untuk<br />UMKM Indonesia.
-          </h2>
+  <footer className="bg-brand-primary text-neutral-white pt-16 md:pt-24 pb-8 md:pb-12 px-4 md:px-8 relative">
+    <div className="max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16 mb-16 md:mb-20">
+        <div className="lg:col-span-5 space-y-6">
+          <a href="#hero" className="font-bold text-2xl tracking-tight flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-brand-primary" />
+            </div>
+            VIRAL<span className="text-brand-accent">AI</span>
+          </a>
+          <p className="text-neutral-white/40 leading-relaxed max-w-sm">
+            Studio kreatif berbasis AI untuk UMKM Indonesia. Bikin konten viral jadi gampang dan terjangkau.
+          </p>
+          <div className="flex gap-3">
+            {[
+              { icon: <AtSign className="w-4 h-4" />, href: '#' },
+              { icon: <Video className="w-4 h-4" />, href: '#' },
+              { icon: <MessageCircle className="w-4 h-4" />, href: 'https://wa.me/6285974107446' },
+            ].map((social, i) => (
+              <a key={i} href={social.href} target={social.href.startsWith('http') ? '_blank' : undefined} className="w-10 h-10 rounded-xl bg-neutral-white/5 border border-neutral-white/10 flex items-center justify-center text-neutral-white/60 hover:text-brand-accent hover:border-brand-accent/30 transition-all">
+                {social.icon}
+              </a>
+            ))}
+          </div>
         </div>
 
-        <div className="max-w-md space-y-6">
-          <p className="text-neutral-white/80 font-medium">Dapatkan tips video marketing gratis</p>
-          <form className="flex flex-col sm:flex-row gap-4" onSubmit={e => e.preventDefault()}>
+        <div className="lg:col-span-3 space-y-4">
+          <h5 className="text-sm font-bold uppercase tracking-widest text-brand-accent">Menu</h5>
+          <ul className="space-y-3">
+            {[['#layanan', 'Layanan'], ['#harga', 'Harga'], ['#tentang', 'Tentang'], ['#order', 'Order']].map(([href, label]) => (
+              <li key={href}><a href={href} className="text-neutral-white/50 hover:text-brand-accent transition-colors text-sm">{label}</a></li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="lg:col-span-4 space-y-4">
+          <h5 className="text-sm font-bold uppercase tracking-widest text-brand-accent">Newsletter</h5>
+          <p className="text-neutral-white/40 text-sm">Tips video marketing gratis tiap minggu</p>
+          <form className="flex gap-2" onSubmit={e => e.preventDefault()}>
             <input
               type="email"
-              placeholder="Email Anda"
-              className="bg-neutral-white/10 border-none rounded-lg px-4 py-3 flex-grow text-neutral-white focus:ring-2 focus:ring-brand-accent transition-all outline-none placeholder:text-neutral-white/40"
+              placeholder="Email kamu"
+              className="bg-neutral-white/5 border border-neutral-white/10 rounded-xl px-4 py-3 flex-grow text-sm text-neutral-white focus:ring-2 focus:ring-brand-accent/30 focus:border-brand-accent/30 transition-all outline-none placeholder:text-neutral-white/30"
             />
-            <button type="submit" className="bg-brand-accent text-brand-primary font-bold px-8 py-3 rounded-lg hover:brightness-110 transition-all">
-              Langganan
+            <button type="submit" className="bg-brand-accent text-brand-primary font-bold px-5 py-3 rounded-xl hover:shadow-[0_0_20px_rgba(168,255,0,0.3)] transition-all text-sm">
+              Go
             </button>
           </form>
-          <p className="text-xs text-neutral-white/50">Kami menghargai privasi data Anda.</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-        <div className="space-y-6">
-          <h5 className="text-brand-accent font-bold text-lg">Menu</h5>
-          <ul className="space-y-4 text-neutral-white/70">
-            <li><a href="#layanan" className="hover:text-brand-accent transition-colors">Layanan</a></li>
-            <li><a href="#harga" className="hover:text-brand-accent transition-colors">Harga</a></li>
-            <li><a href="#tentang" className="hover:text-brand-accent transition-colors">Tentang Kami</a></li>
-            <li><a href="#order" className="hover:text-brand-accent transition-colors">Order</a></li>
-          </ul>
+      <div className="pt-8 border-t border-neutral-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="text-neutral-white/30 text-xs">
+          &copy; 2026 ViralAI Studio. Made with AI.
         </div>
-        <div className="space-y-6">
-          <h5 className="text-brand-accent font-bold text-lg">Sosial Media</h5>
-          <ul className="space-y-4 text-neutral-white/70">
-            <li><a href="#" className="hover:text-brand-accent transition-colors">Instagram</a></li>
-            <li><a href="#" className="hover:text-brand-accent transition-colors">TikTok</a></li>
-            <li><a href="#" className="hover:text-brand-accent transition-colors">WhatsApp</a></li>
-          </ul>
-        </div>
+        <p className="text-neutral-white/20 text-[10px] text-center md:text-right max-w-md">
+          ViralAI Studio adalah layanan jasa video marketing berbasis AI untuk UMKM Indonesia. Hasil dapat bervariasi.
+        </p>
       </div>
-    </div>
-
-    <div className="max-w-7xl mx-auto mt-20 md:mt-32 pt-8 border-t border-neutral-white/10 flex flex-col md:flex-row justify-between items-start gap-8">
-      <div className="text-neutral-white/60 text-sm">
-        © 2026 ViralAI Studio. All Rights Reserved.
-      </div>
-      <p className="max-w-4xl text-neutral-white/40 text-[10px] leading-relaxed">
-        ViralAI Studio adalah layanan jasa video marketing berbasis AI untuk UMKM Indonesia. Konten yang ditampilkan merupakan contoh dan hasil dapat bervariasi.
-      </p>
     </div>
   </footer>
 );
@@ -514,22 +688,28 @@ function App() {
       <Navbar />
       <main className="flex-grow">
         <Hero />
+        <MarqueeText />
         <About />
         <Services />
         <Values />
+        <Testimonials />
         <Pricing />
         <OrderForm />
         <CTA />
       </main>
       <Footer />
 
-      <a
+      <motion.a
         href="https://wa.me/6285974107446"
         target="_blank"
-        className="fixed bottom-8 right-8 w-16 h-16 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform z-50"
+        className="fixed bottom-6 right-6 w-14 h-14 bg-[#25D366] text-white rounded-2xl flex items-center justify-center shadow-[0_8px_30px_rgba(37,211,102,0.4)] z-50"
+        whileHover={{ scale: 1.1, rotate: 5 }}
+        whileTap={{ scale: 0.95 }}
+        animate={{ y: [0, -5, 0] }}
+        transition={{ y: { duration: 3, repeat: Infinity, ease: 'easeInOut' } }}
       >
-        <MessageCircle size={32} />
-      </a>
+        <MessageCircle size={26} />
+      </motion.a>
     </div>
   );
 }
